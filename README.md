@@ -1,7 +1,8 @@
 # Mystery3AtDrexel Disclaimer
 
 Since Google secrets are required to login to the webapp, a video has been included for demo purposes.
- 
+
+https://www.youtube.com/watch?v=emE_MVhzbA0
 
 # CI 102 Lab 63 Group 11
 
