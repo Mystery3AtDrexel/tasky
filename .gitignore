@@ -1,0 +1,7 @@
+# VS Code
+.vscode/
+
+# Local data
+var/
+
+*.env

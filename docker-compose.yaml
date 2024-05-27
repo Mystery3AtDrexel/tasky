@@ -1,0 +1,44 @@
+version: '2.2'
+
+services:
+  frontend:
+    image: node:20-alpine
+    container_name: tasky-frontend
+    volumes:
+      - ./client:/home/node/app:cached
+    environment:
+      VITE_API_ENDPOINT: http://localhost:8080/api
+    working_dir: /home/node/app
+    entrypoint: []
+    command: [ "sh", "-c", "yarn install --ignore-engines && yarn run dev:docker" ]
+    ports:
+      - "3000:5173"
+    depends_on:
+      - server
+
+  server:
+    container_name: tasky-server
+    image: node:20-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server/dist:/home/node/app/dist:cached
+      - ./server/src:/home/node/app/src:cached
+      - ./server/node_modules:/home/node/app/node_modules:cached
+      - ./server/package.json:/home/node/app/package.json:cached
+      - ./server/tsconfig.json:/home/node/app/tsconfig.json:cached
+      - ./server/yarn.lock:/home/node/app/yarn.lock:cached
+      - ./server/drizzle.config.ts:/home/node/app/drizzle.config.ts:cached
+      - ./var:/home/node/var:cached
+    environment:
+      ENV: dev
+      CLIENT_URL: http://localhost:3000
+      SERVER_PORT: 8080
+      SQLITE_DB_FILE: /home/node/var/sqlite.db
+      DRIZZLE_MIGRATIONS_FOLDER: ../var/drizzle # /home/node/var/drizzle
+    env_file:
+      - .env
+    working_dir: /home/node/app
+    entrypoint: []
+    command: [ "sh", "-c", "yarn install --ignore-engines && yarn run migrate:docker && yarn run dev" ]
+
