@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { CreateTaskOutput } from "../../lib/api";
-import { InsertTaskInput, Task } from "../../lib/schema";
+import { Task, UpsertTaskInput } from "../../lib/schema";
 import { CreateTaskCard } from "./CreateTaskCard";
 import ProgressBar from "./ProgressBar";
 import TaskCard from "./TaskCard";
-import TaskFilter from './TaskFilter';
+import TaskFilter from "./TaskFilter";
 
 type TaskViewProps = {
-    tasks: Task[];
-    onCreateTask: (taskInput: InsertTaskInput) => Promise<CreateTaskOutput>;
+  tasks: Task[];
+  onCreateTask: (taskInput: UpsertTaskInput) => Promise<void>;
 };
 
 function TaskView({ tasks, onCreateTask }: TaskViewProps) {
@@ -16,7 +15,9 @@ function TaskView({ tasks, onCreateTask }: TaskViewProps) {
     const [colorFilter, setColorFilter] = useState(() => (task: Task) => true);
     const [dateRangeFilter, setDateRangeFilter] = useState(() => (task: Task) => true);
 
-    const filteredTasks = tasks.filter(oldDoneFilter).filter(colorFilter).filter(dateRangeFilter)
+    let filters = [oldDoneFilter, colorFilter, dateRangeFilter]
+
+    const filteredTasks = filters.reduce((tasks, filter) => (tasks.filter(filter)), tasks)
 
     return (
         <div className="space-y-2 pb-2">
@@ -31,14 +32,11 @@ function TaskView({ tasks, onCreateTask }: TaskViewProps) {
             </div>
             <CreateTaskCard onSubmit={onCreateTask} />
 
-            {filteredTasks.map((task) => (
-                <TaskCard
-                    task={task}
-                    key={task.id}
-                />
-            ))}
-        </div>
-    );
-};
+      {filteredTasks.map((task) => (
+        <TaskCard task={task} key={task.id} />
+      ))}
+    </div>
+  );
+}
 
 export default TaskView;

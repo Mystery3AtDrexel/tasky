@@ -9,6 +9,7 @@ export type Task = {
 };
 
 export type InsertTaskInput = Partial<Omit<Task, "id">>;
+export type UpsertTaskInput = Partial<Task>;
 export type UpdateTaskInput = InsertTaskInput & { id: Task["id"] };
 
 export type User = {

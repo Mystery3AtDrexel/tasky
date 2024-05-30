@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Task } from '../../lib/schema';
-import DisplayTaskCard from './DisplayTaskCard';
-import EditingTaskCard from './EditingTaskCard';
-import { deleteTask, updateTask } from '../../lib/api';
+import { useState } from "react";
+import { Task, UpdateTaskInput, UpsertTaskInput } from "../../lib/schema";
+import DisplayTaskCard from "./DisplayTaskCard";
+import { deleteTask, updateTask } from "../../lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import EditTaskCard from "./EditTaskCard";
 
-type TaskCardProps = { 
-  task: Task,
- };
+type TaskCardProps = {
+  task: Task;
+};
 
 function TaskCard({ task }: TaskCardProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,23 +21,28 @@ function TaskCard({ task }: TaskCardProps) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 
+  const onUpdateTask = async (values: UpsertTaskInput) => {
+    if (!values.id) return;
+    await updateTaskMutation.mutateAsync(values as UpdateTaskInput);
+  };
+
   if (isEditing) {
     return (
-      <EditingTaskCard 
-        initialTask={task} 
-        setIsEditing={setIsEditing} 
-        onUpdateTask={updateTaskMutation.mutateAsync}
+      <EditTaskCard
+        initialValues={task}
+        setIsEditing={setIsEditing}
+        onFinish={onUpdateTask}
       />
     );
-  };
+  }
   return (
-    <DisplayTaskCard 
-      task={task} 
-      setIsEditing={setIsEditing} 
+    <DisplayTaskCard
+      task={task}
+      setIsEditing={setIsEditing}
       onDeleteTask={deleteTaskMutation.mutateAsync}
       onUpdateTask={updateTaskMutation.mutateAsync}
     />
   );
-};
+}
 
 export default TaskCard;

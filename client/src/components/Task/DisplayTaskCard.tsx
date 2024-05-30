@@ -63,7 +63,7 @@ function DisplayTaskCard({
       <div className="w-full">
         <div className="flex flex-row w-full justify-between m-1">
           <div className="flex flex-col pt-[1px]">
-            <span className="text-xl font-bold">{task.title}</span> 
+            <span className="text-xl font-bold line-clamp-2 mr-2">{task.title}</span> 
             <div className="flex flex-row flex-wrap items-center">
                 <span className="text-m pr-2">{taskDateFormat.format(task.date)}</span>
                 {task.date < dateNow && <span className={`flex flex-row items-center accent-red-600 text-red-600 font-bold transition duration-100 ease-in-out ${done ? "opacity-0" : "opacity-100"}`}>
@@ -100,8 +100,8 @@ function DisplayTaskCard({
             </svg>
           </div>
         </div>
-        <div className="m-1 my-3">
-          <span className="text-base break-words">{task.description}</span>
+        <div className="m-1 my-3 mr-6">
+          <span className="text-base break-words whitespace-pre-wrap">{task.description}</span>
         </div>
       </div>
     </div>

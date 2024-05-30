@@ -2,6 +2,7 @@ import { Task } from "../../lib/schema";
 import { bgColors } from "../../lib/constants";
 
 function tasksCompletedPercentage(tasks: Task[]) {
+  if (tasks.length === 0) {return 0};
   return tasks.filter((task) => (task.done === true)).length / tasks.length * 100;
 };
 
@@ -12,6 +13,7 @@ function colorsToDraw(tasks: Task[]) {
 };
 
 function tasksCompletedPercentagePerColor(color: string, tasks: Task[]) {
+  if (tasks.length === 0) {return 0};
   return tasks.filter((task) => (task.done === true && task.color === color)).length / tasks.length * 100;
 };
 
